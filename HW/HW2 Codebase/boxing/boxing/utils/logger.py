@@ -5,6 +5,16 @@ from flask import current_app, has_request_context
 
 
 def configure_logger(logger):
+    """
+    Configure logger with necessary handlers and formatters.
+
+    Sets up a logger to output logs to stderr with timestamps and
+    adds Flask app handlers if context is a request
+
+    Args:
+        logger: logger instance to configure
+    
+    """
     logger.setLevel(logging.DEBUG)
 
     # Create a console handler that logs to stderr
