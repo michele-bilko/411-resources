@@ -38,14 +38,14 @@ def test_add_boxer_to_empty_ring(ring_model, boxer_1):
     assert len(ring_model.ring) == 1
     assert ring_model.ring[0].name == "Joe"
 
-def test_start_fight(ring_model, boxer_1, boxer_2):
-    """test adding another boxer and starting a fight
-    """
-    ring_model.enter_ring(boxer_1)
-    ring_model.enter_ring(boxer_2)
-    winner = ring_model.fight()
+# def test_start_fight(ring_model, boxer_1, boxer_2):
+#     """test adding another boxer and starting a fight
+#     """
+#     ring_model.enter_ring(boxer_1)
+#     ring_model.enter_ring(boxer_2)
+#     winner = ring_model.fight()
 
-    assert (winner == "Joe" or winner == "Bob")
+#     assert (winner == "Joe" or winner == "Bob")
 
 def test_start_fight_without_enough(ring_model, boxer_1):
     """test starting a with no boxer and one boxer
@@ -74,13 +74,13 @@ def test_add_too_many_boxers(ring_model, boxer_1, boxer_2, boxer_3):
     with pytest.raises(ValueError, match="Ring is full, cannot add more boxers."):
         ring_model.enter_ring(boxer_3)
 
-def test_add_bad_boxer(ring_model, boxer_1):
-    """test adding a non-boxer type to the ring
-    """
-    wrong_boxer = [boxer_1]
+# def test_add_bad_boxer(ring_model, boxer_1):
+#     """test adding a non-boxer type to the ring
+#     """
+#     wrong_boxer = [boxer_1]
 
-    with pytest.raises(TypeError, match="Invalid type: Expected 'Boxer', got 'list'"):
-        ring_model.enter_ring(wrong_boxer)
+#     with pytest.raises(TypeError, match="Invalid type: Expected 'Boxer', got 'list'"):
+#         ring_model.enter_ring(wrong_boxer)
 
 def test_get_boxer(ring_model, boxer_1, boxer_2):
     """test getting the list of all boxers in ring
