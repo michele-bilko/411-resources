@@ -29,7 +29,6 @@ def boxer_2():
 def boxer_3():
     return Boxer(3, "Dave", 190, 65, 68, 25, "MIDDLEWEIGHT")
 
-# need to make a mocker and some mock tests?
 
 def test_add_boxer_to_empty_ring(ring_model, boxer_1):
     """test adding a boxer to an empty ring
@@ -48,8 +47,15 @@ def test_start_fight(ring_model, boxer_2):
 
     assert (winner == "Joe" or winner == "Bob")
 
-def test_start_fight_without_enough():
-    pass
+def test_start_fight_without_enough(ring_model, boxer_1):
+    """test starting a with no boxer and one boxer
+    """
+    with pytest.raises(ValueError, match="There must be two boxers to start a fight."):
+        ring_model.fight()
+
+    ring_model.enter_ring(boxer_1)
+    with pytest.raises(ValueError, match="There must be two boxers to start a fight."):
+        ring_model.fight()
 
 def test_clear_ring(ring_model, boxer_1):
     """test clearing a ring with a boxer
