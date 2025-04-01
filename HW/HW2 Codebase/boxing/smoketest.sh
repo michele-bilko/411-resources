@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the base URL for the Flask API
-BASE_URL="http://localhost:5000/api"
+BASE_URL="http://localhost:5001/api"
 
 # Flag to control whether to echo JSON output
 ECHO_JSON=false
@@ -94,7 +94,7 @@ get_boxer_by_name() {
   response=$(curl -s -X GET "$BASE_URL/get-boxer-by-name/$boxer_name")
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Boxer retrieved successfully by name ($boxer_name)."
-    if [ "$ECHO_JSON" = true]; then
+    if [ "$ECHO_JSON" = true ]; then
       echo "Boxer JSON:"
       echo "$response" | jq .
     fi
@@ -129,7 +129,7 @@ enter_ring() {
   echo "Boxer $name entering the ring..."
   response=$(curl -s -X POST "$BASE_URL/enter-ring" \
     -H "Content-Type: application/json" \
-    -d "{\"name\": $name}"
+    -d "{\"name\": \"$name\"}"
   )
   if echo "$response" | grep -q '"status": "success"'; then
     echo "Boxer entered the ring successfully."

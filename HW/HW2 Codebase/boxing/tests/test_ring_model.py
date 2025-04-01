@@ -38,7 +38,7 @@ def test_add_boxer_to_empty_ring(ring_model, boxer_1):
     assert len(ring_model.ring) == 1
     assert ring_model.ring[0].name == "Joe"
 
-def test_start_fight(ring_model, boxer_2):
+def test_start_fight(ring_model, boxer_1, boxer_2):
     """test adding another boxer and starting a fight
     """
     ring_model.enter_ring(boxer_1)
@@ -60,12 +60,12 @@ def test_start_fight_without_enough(ring_model, boxer_1):
 def test_clear_ring(ring_model, boxer_1):
     """test clearing a ring with a boxer
     """
-    ring_model.enter(boxer_1)
+    ring_model.enter_ring(boxer_1)
     ring_model.clear_ring()
 
     assert len(ring_model.ring) == 0
 
-def test_add_too_many_boxers(ring_model, boxer_3):
+def test_add_too_many_boxers(ring_model, boxer_1, boxer_2, boxer_3):
     """test adding too many boxers
     """
     ring_model.enter_ring(boxer_1)
@@ -87,7 +87,7 @@ def test_get_boxer(ring_model, boxer_1, boxer_2):
     """
     ring_model.enter_ring(boxer_1)
     ring_model.enter_ring(boxer_2)
-    boxers = ring_model.get_boxers
+    boxers = ring_model.get_boxers()
 
     assert len(boxers) == 2
     assert ring_model.ring[0].name == "Joe"

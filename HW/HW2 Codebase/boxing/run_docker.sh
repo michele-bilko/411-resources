@@ -5,8 +5,8 @@ IMAGE_NAME="boxing-app"
 CONTAINER_TAG="boxing-app"
 HOST_PORT=5001
 CONTAINER_PORT=5000
-DB_VOLUME_PATH= "$(pwd)/db" # Adjust this to the desired host path for the database persistence
-BUILD=  true # Set this to true if you want to build the image
+DB_VOLUME_PATH="$(pwd)/db" # Adjust this to the desired host path for the database persistence
+BUILD=true # Set this to true if you want to build the image
 
 # Check if we need to build the Docker image
 if [ "$BUILD" = true ]; then
@@ -27,30 +27,30 @@ fi
 # A LITTLE CONFUSED HERE
 
 # Stop and remove the running container if it exists
-if [ "$(docker ps -q -a -f name=${IMAGE_NAME}_container)" ]; then
-    echo "Stopping running container: ${IMAGE_NAME}_container"
-    docker stop ${IMAGE_NAME}_container
-
+if [ "$(docker ps -q -a -f name=${CONTAINER_TAG}_container)" ]; then
+    echo "Stopping running container: ${CONTAINER_TAG}_container"
+    docker stop ${CONTAINER_TAG}_container
 
     # Check if the stop was successful
     if [ $? -eq 0 ]; then
-        echo "Removing container: ${IMAGE_NAME}_container"
-        docker rm ${IMAGE_NAME}_container
+        echo "Removing container: ${CONTAINER_TAG}_container"
+        docker rm ${CONTAINER_TAG}_container
     else
-        echo "Failed to stop container: ${IMAGE_NAME}_container"
+        echo "Failed to stop container: ${CONTAINER_TAG}_container"
         exit 1
     fi
 else
-    echo "No running container named ${IMAGE_NAME}_container found."
+    echo "No running container named ${CONTAINER_TAG}_container found."
 fi
 
 # Run the Docker container with the necessary ports and volume mappings
 echo "Running Docker container..."
 docker run -d \
-  --name ${IMAGE_NAME}_container \
+  --name ${CONTAINER_TAG}_container \
   --env-file .env \
   -v "${DB_VOLUME_PATH}:/app/db" \
   -p ${HOST_PORT}:${CONTAINER_PORT} \
-  ${IMAGE_NAME}:${CONTAINER_TAG}
+  ${IMAGE_NAME}:latest \
+  python app.py
 
 echo "Docker container is running on port ${HOST_PORT}."

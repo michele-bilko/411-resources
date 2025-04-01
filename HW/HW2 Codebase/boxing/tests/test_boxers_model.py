@@ -60,23 +60,23 @@ def test_create_boxer(mock_cursor):
 
 
 
-def test_create_dupe_boxer():
+def test_create_dupe_boxer(mock_cursor):
     """Test error when creating a boxer with a duplicate name."""
     # Mock that the boxer already exists
-    mock_cursor.fetchone.return_value = (1,)
+    mock_cursor.fetchone.return_value = (1, "Bob", 220, 71, 71.0, 25)
     
     with pytest.raises(ValueError, match="Boxer with name 'Bob' already exists"):
         create_boxer(name="Bob", weight=220, height=71, reach=71.0, age=25)
 
 
-def test_create_boxer_invalid_age():
+def test_create_boxer_invalid_age(mock_cursor):
     """Test error for creating invalid age boxer"""
     with pytest.raises(ValueError, match="Invalid age: 17. Must be between 18 and 40."):
         create_boxer(name="Young Bob", weight=150, height=70, reach=70.0, age=17)
     with pytest.raises(ValueError, match="Invalid age: 41. Must be between 18 and 40."):
         create_boxer(name="Old Bob", weight=150, height=70, reach=70.0, age=41)
 
-def test_create_boxer_invalid_height():
+def test_create_boxer_invalid_height(mock_cursor):
     """Test error when creating a boxer with invalid height."""
     with pytest.raises(ValueError, match="Invalid height: 0. Must be greater than 0."):
         create_boxer(name="Short Bob", weight=150, height=0, reach=70.0, age=25)
@@ -84,12 +84,12 @@ def test_create_boxer_invalid_height():
     with pytest.raises(ValueError, match="Invalid height: -5. Must be greater than 0."):
         create_boxer(name="Negative Bob", weight=150, height=-5, reach=70.0, age=25)
 
-def test_create_boxer_invalid_weight():
+def test_create_boxer_invalid_weight(mock_cursor):
     """Test error when creating a boxer with invalid weight."""
     with pytest.raises(ValueError, match="Invalid weight: 124. Must be at least 125."):
         create_boxer(name="Light Bob", weight=124, height=70, reach=70.0, age=25)
 
-def test_create_boxer_invalid_reach():
+def test_create_boxer_invalid_reach(mock_cursor):
     """Test error when creating a boxer with invalid reach."""
     with pytest.raises(ValueError, match="Invalid reach: 0.0. Must be greater than 0."):
         create_boxer(name="Armless Bob", weight=150, height=70, reach=0.0, age=25)
@@ -97,7 +97,7 @@ def test_create_boxer_invalid_reach():
     with pytest.raises(ValueError, match="Invalid reach: -10.0. Must be greater than 0."):
         create_boxer(name="Negative Arms Bob", weight=150, height=70, reach=-10.0, age=25)
 
-def test_delete_boxer():
+def test_delete_boxer(mock_cursor):
     """Deleting a boxer from the database"""
     mock_cursor.fetchone.return_value = (1,)
     delete_boxer(1)
@@ -105,14 +105,14 @@ def test_delete_boxer():
     mock_cursor.execute.assert_any_call("SELECT id FROM boxers WHERE id = ?", (1,))
     mock_cursor.execute.assert_any_call("DELETE FROM boxers WHERE id = ?", (1,))
 
-def test_delete_boxer_nothing():
+def test_delete_boxer_nothing(mock_cursor):
     """Check that correct error comes up when deleting boxer that doesn't exist"""
     mock_cursor.fetchone.return_value = None
     
     with pytest.raises(ValueError, match="Boxer with ID 999 not found."):
         delete_boxer(999)
     
-def test_get_leaderboard():
+def test_get_leaderboard(mock_cursor):
     """Test getting sorted leaderboard by wins"""
     mock_cursor.fetchall.return_value = [
         (1, "Bob", 220, 71, 71.0, 30, 50, 48, 0.96),
@@ -136,7 +136,7 @@ def test_get_leaderboard():
     assert result[0]['weight_class'] == "HEAVYWEIGHT"
     assert result[0]['win_pct'] == 96.0
 
-def test_get_leaderboard_invalid():
+def test_get_leaderboard_invalid(mock_cursor):
     """Test invalid sort"""
     with pytest.raises(ValueError, match="Invalid sort_by parameter: invalid_sort"):
         get_leaderboard(sort_by="invalid_sort")
@@ -209,7 +209,7 @@ def test_get_boxer_by_name_bad(mock_cursor):
         get_boxer_by_name("Unknown Boxer")
 
 
-def test_get_weight_class():
+def test_get_weight_class(mock_cursor):
     """Test determining the weight class based on weight."""
     assert get_weight_class(125) == "FEATHERWEIGHT"
     assert get_weight_class(133) == "LIGHTWEIGHT"
@@ -222,7 +222,7 @@ def test_get_weight_class():
     assert get_weight_class(202) == "MIDDLEWEIGHT"
 
 
-def test_get_weight_class_bad():
+def test_get_weight_class_bad(mock_cursor):
     """Test error when determining weight class with invalid weight."""
     with pytest.raises(ValueError, match="Invalid weight: 124. Weight must be at least 125."):
         get_weight_class(124)
